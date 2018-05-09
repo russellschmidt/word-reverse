@@ -13,6 +13,8 @@ class GamePage extends React.Component {
       level: 1,
       timeLeftInSeconds: 4,
       intervalId: null,
+      img: "https://storage.googleapis.com/russellmschmidt-net-portfolio/word-reverse/stockshit/",
+      showBoss: false
     }
   }
   componentDidMount() {
@@ -49,7 +51,7 @@ class GamePage extends React.Component {
           accuracy: ((this.state.accuracy * this.state.level + lastAccuracy) / (this.state.level + 1)), 
           level: this.state.level + 1
         }, this.nextLevel())
-        if (this.state.accuracy < .8) {
+        if (this.state.accuracy < .9) {
           // losing condition
           alert(`I'm sorry, we are going to have to let you go.`)
         } else {
@@ -65,6 +67,25 @@ class GamePage extends React.Component {
       </div>
     )
   }
+  displayBoss = () => {
+    let num = Math.floor(Math.random() * 32)
+    if (num !== 1 || num !== 9 ){
+      num = Math.floor(Math.random() * 32)
+    }
+    const img = this.state.img + num + ".jpg"
+    return (
+      <div className="game-bossImage__container">
+        <figure>
+          <img
+            className="game-bossImage" 
+            alt="bossholes"
+            src={img}
+            />
+          <figcaption>"Hmm... I think you can do better."</figcaption>
+        </figure>
+      </div>
+    )
+  }
   generateNewWord = () => {
     const words = wordsArray.filter(w => !!w.match(/^.{10}/i))
     const word = words[Math.floor(Math.random() * words.length)]
@@ -77,6 +98,7 @@ class GamePage extends React.Component {
     this.setState({timeLeftInSeconds: 4})
     let intervalId = setInterval(this.timer, 1000);
     this.setState({intervalId: intervalId})
+    this.setState({showBoss: !!this.state.showBoss})
   }
   round(number, precision) {
     var shift = function (number, precision) {
@@ -116,6 +138,7 @@ class GamePage extends React.Component {
         <div>
           <button className="button" onClick={this.handleClear}>Clear</button>
         </div>
+        {this.displayBoss() }
        
       </div>
     )
