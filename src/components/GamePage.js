@@ -1,4 +1,5 @@
 import React from 'react'
+import wordsArray from 'an-array-of-english-words'
 import GamePageTitle from './GamePageTitle'
 
 class GamePage extends React.Component {
@@ -19,7 +20,7 @@ class GamePage extends React.Component {
     this.setState({intervalId: intervalId})
   }
   componentWillMount() {
-    const words = ["friend", "dangle", "happy"]
+    const words = wordsArray.filter(w => !!w.match(/^.{10}/i))
     const word = words[Math.floor(Math.random() * words.length)]
     this.setState({
       targetWord: word, targetWordLength: word.length
@@ -63,7 +64,7 @@ class GamePage extends React.Component {
     )
   }
   generateNewWord = () => {
-    const words = ['youth code', 'the damned', 'joy division', 'the pixies']
+    const words = wordsArray.filter(w => !!w.match(/^.{10}/i))
     const word = words[Math.floor(Math.random() * words.length)]
     this.setState({
       targetWord: word, targetWordLength: word.length
@@ -110,7 +111,9 @@ class GamePage extends React.Component {
           value={this.state.guessWord} 
           onChange={this.handleInput} 
         />
-        <button onClick={this.handleClear}>Clear</button>
+        <div>
+          <button onClick={this.handleClear}>Clear</button>
+        </div>
        
       </div>
     )
