@@ -25,14 +25,7 @@ class GamePage extends React.Component {
       targetWord: word, targetWordLength: word.length
     })
   }
-  timer = () => {
-    let timeLeft = this.state.timeLeftInSeconds - 1
-    if (timeLeft >= 0) {
-      this.setState({timeLeftInSeconds: timeLeft})
-    } else {
-      clearInterval(this.state.intervalId)
-    }
-  }
+
   calculateAccuracy = (guess, answer) => {
     // see if all the letters are present
     return 0.8
@@ -62,6 +55,13 @@ class GamePage extends React.Component {
       } 
     }
   }
+  displayWord() {
+    return (
+      <div>
+        <h1>{this.state.targetWord}</h1>
+      </div>
+    )
+  }
   generateNewWord = () => {
     const words = ['youth code', 'the damned', 'joy division', 'the pixies']
     const word = words[Math.floor(Math.random() * words.length)]
@@ -75,12 +75,23 @@ class GamePage extends React.Component {
     let intervalId = setInterval(this.timer, 1000);
     this.setState({intervalId: intervalId})
   }
-  displayWord() {
-    return (
-      <div>
-        <h1>{this.state.targetWord}</h1>
-      </div>
-    )
+  round(number, precision) {
+    var shift = function (number, precision) {
+      var numArray = ("" + number).split("e");
+      return +(numArray[0] + "e" + (numArray[1] ? (+numArray[1] + precision) : precision));
+    };
+    return shift(Math.round(shift(number, +precision)), -precision);
+  }
+  timer = () => {
+    let timeLeft = this.state.timeLeftInSeconds - 1
+    if (timeLeft >= 0) {
+      this.setState({timeLeftInSeconds: timeLeft})
+    } else {
+      clearInterval(this.state.intervalId)
+    }
+  }
+  handleClear = () => {
+    this.setState({ guessWord: '' })
   }
   handleInput = (e) => {
     this.setState({guessWord: e.target.value}, this.compareGuess(e.target.value))
@@ -89,14 +100,17 @@ class GamePage extends React.Component {
     return (
       <div className="game-page__main">
         <GamePageTitle />
-        <h4>Accuracy: {this.state.accuracy * 100}% | Level: {this.state.level}</h4>
+        <h4>Accuracy: {this.round(this.state.accuracy * 100, 5)}% --- Level: {this.state.level}</h4>
         <h3>Time Left on Task: {this.state.timeLeftInSeconds}</h3>
         {this.displayWord() && <h1 className="game-word__reverse">{this.displayWord()}</h1>}
        
-          <input type="text" 
-            value={this.state.guessWord} 
-            onChange={this.handleInput} 
-          />
+        <input 
+          className="game-input"
+          type="text" 
+          value={this.state.guessWord} 
+          onChange={this.handleInput} 
+        />
+        <button onClick={this.handleClear}>Clear</button>
        
       </div>
     )
