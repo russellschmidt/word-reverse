@@ -3,7 +3,76 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
-
+.button {
+  font-size: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: #007fbd;
+  border: 1px solid #dbebfa;
+  color: #d7d7d7;
+  cursor: pointer;
+}
+.game-start__textContainer {
+  margin: 1rem auto;
+  width: 60vw;
+  max-width: 960px;
+  text-align: center;
+}
+.game-start__textContainer > h2 {
+  font-size: 1.5rem;
+}
+.game-start__textContainer > h3 {
+  font-size: 1.1rem;
+}
+.game-start__textContainer > img {
+  display: block;
+  margin: 1rem auto;
+  width: 58vw;
+  max-width: 920px;
+}
+.game-instructions__textContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  min-width: 300px;
+}
+.game-instructions__textContainer > div {
+  width: 45vw;
+  margin: 1rem auto;
+}
+.game-instructions__image {
+  width: 90%;
+  margin: 3rem auto;
+  display: block;
+}
+.game-instructions__text {
+  margin: 1rem auto;
+  padding: 2rem;
+}
+.header{
+  height: 80px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  padding: 1rem;
+  background: #00334e;
+  border-bottom: 5px solid #dbebfa;
+}
+.header-title {
+  padding: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+.header-title:focus {
+  outline: none;
+}
+.header-title__shadow {
+  opacity: 0.2;
+}
 .game-page__main {
   height: 90vh;
   width: 90vw;

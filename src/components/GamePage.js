@@ -112,7 +112,7 @@ class GamePage extends React.Component {
           onChange={this.handleInput} 
         />
         <div>
-          <button onClick={this.handleClear}>Clear</button>
+          <button className="button" onClick={this.handleClear}>Clear</button>
         </div>
        
       </div>
