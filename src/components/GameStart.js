@@ -10,15 +10,19 @@ class GameStart extends React.Component {
       showInstructions: false,
       showGame: false,
       img: "https://storage.googleapis.com/russellmschmidt-net-portfolio/word-reverse/stockshit/1.jpg",
-      img2: "https://storage.googleapis.com/russellmschmidt-net-portfolio/word-reverse/stockshit/"
+      img2: "https://storage.googleapis.com/russellmschmidt-net-portfolio/word-reverse/stockshit/",
+      companyName: ''
     }
+  }
+  componentWillMount() {
+    this.setState({companyName: Faker.company.companyName()})
   }
   showStartButton() {
     return (
       <div>
         <div className="game-start__textContainer">
           <h3>Are <b>YOU</b> ready to see what it takes to make it in the corporate world! Time to get specialized and shaped-up... T-shaped up!</h3>
-          <h2>Welcome to {Faker.company.companyName()}'s {Faker.commerce.department()} Division</h2>
+          <h2>Welcome to {this.state.companyName}'s {Faker.commerce.department()} Division</h2>
           <h3>We {Faker.company.bsBuzz()} {Faker.company.bsAdjective()} {Faker.company.bsNoun()}: "{Faker.company.catchPhrase()}"</h3>
           <div>
             <button 
@@ -41,6 +45,9 @@ class GameStart extends React.Component {
               className="button"
               onClick={() => this.setState({showGame: true})}
             >Start Game</button>
+          </div>
+          <div>
+            <p className="game-instructions__disclaimer"><super>*</super>Team membership should not be construed as an offer of employment. Thank you for your interest in {this.state.companyName}.</p>
           </div>
         </div>
         <div>

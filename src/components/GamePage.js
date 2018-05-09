@@ -36,12 +36,14 @@ class GamePage extends React.Component {
     const winrar = this.state.targetWord
     if (winrar) {
       if (guess === winrar) {
+        this.handleClear()
         // do win stuff - calc accuracy, next level
         this.setState({
           accuracy: (this.state.accuracy * this.state.level + 1) / (this.state.level + 1), 
           level: this.state.level + 1
         }, this.nextLevel())
       } else if (guess.length === winrar.length) { 
+        this.handleClear()
         const lastAccuracy = this.calculateAccuracy(guess, winrar)
         this.setState({
           accuracy: ((this.state.accuracy * this.state.level + lastAccuracy) / (this.state.level + 1)), 
@@ -103,10 +105,10 @@ class GamePage extends React.Component {
         <GamePageTitle />
         <h4>Accuracy: {this.round(this.state.accuracy * 100, 5)}% --- Level: {this.state.level}</h4>
         <h3>Time Left on Task: {this.state.timeLeftInSeconds}</h3>
-        {this.displayWord() && <h1 className="game-word__reverse">{this.displayWord()}</h1>}
+        {this.displayWord() && <h3 className="game-word__reverse game-page__text">{this.displayWord()}</h3>}
        
         <input 
-          className="game-input"
+          className="game-input game-page__text"
           type="text" 
           value={this.state.guessWord} 
           onChange={this.handleInput} 
