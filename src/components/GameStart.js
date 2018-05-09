@@ -47,7 +47,7 @@ class GameStart extends React.Component {
             >Start Game</button>
           </div>
           <div>
-            <p className="game-instructions__disclaimer"><super>*</super>Team membership should not be construed as an offer of employment. Thank you for your interest in {this.state.companyName}.</p>
+            <p className="game-instructions__disclaimer"><super>*</super>Team membership should not be construed as an offer of employment nor change of contractor status. Thank you for your interest in {this.state.companyName}.</p>
           </div>
         </div>
         <div>
