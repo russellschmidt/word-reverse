@@ -33,7 +33,6 @@ class GamePage extends React.Component {
     this.setState({intervalId: intervalId})
   }
   calculateAccuracy = (guess, answer) => {
-    let accuracyScore = 0.0
     // see if all the letters are present
     const guessMatch = this.calculateMatches(guess, answer)
     const answerMatch = this.calculateMatches(answer, answer)

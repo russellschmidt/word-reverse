@@ -30,7 +30,7 @@ class GameStart extends React.Component {
               onClick={() => this.setState({showInstructions: true})}
             >Start your career</button>
           </div>
-          <img src={this.state.img} alt="main stock photo of losers in an empty room"/>
+          <img src={this.state.img} alt="some business losers in an empty room"/>
         </div>
       </div>
     )
