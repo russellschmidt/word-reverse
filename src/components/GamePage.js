@@ -11,54 +11,76 @@ class GamePage extends React.Component {
       targetWordLength: 0,
       accuracy: 1.00,
       level: 1,
-      timeLeftInSeconds: 4,
+      intervalInSeconds: 5,
+      timeLeftInSeconds: 5,
       intervalId: null,
       img: "https://storage.googleapis.com/russellmschmidt-net-portfolio/word-reverse/stockshit/",
-      showBoss: false
+      bossImg: "https://storage.googleapis.com/russellmschmidt-net-portfolio/word-reverse/stockshit/" + Math.floor(Math.random() * 32) + ".jpg",
+      canThreshold: 0.8,
+
     }
+  }
+  componentWillMount() {
+    const words = wordsArray.filter(w => !!w.match(/^.{2}/i))
+    const word = words[Math.floor(Math.random() * words.length)]
+    this.setState({
+      targetWord: word, 
+      targetWordLength: word.length
+    })
   }
   componentDidMount() {
     let intervalId = setInterval(this.timer, 1000);
     this.setState({intervalId: intervalId})
   }
-  componentWillMount() {
-    const words = wordsArray.filter(w => !!w.match(/^.{10}/i))
-    const word = words[Math.floor(Math.random() * words.length)]
-    this.setState({
-      targetWord: word, targetWordLength: word.length
-    })
-  }
-
   calculateAccuracy = (guess, answer) => {
+    let accuracyScore = 0.0
     // see if all the letters are present
-    return 0.8
-    // see if the letters are in the right order
+    const guessMatch = this.calculateMatches(guess, answer)
+    const answerMatch = this.calculateMatches(answer, answer)
+    return guessMatch / answerMatch < 1 ? guessMatch / answerMatch : 1 / (guessMatch / answerMatch)
+  }
+  calculateMatches = (guess, answer) => {
+    let matches = 0
+    const iterateLength = guess.length > answer.length ? answer.length : guess.length
+    for (var i = 0; i < iterateLength; i++) {
+      const char = guess.charAt(i)
+      const regex = new RegExp(char, "gi") 
+      if (answer.match(regex)) {
+        matches += answer.match(regex).length
+      }
+    }
+    return matches
   }
   compareGuess = (guess) => {
     const winrar = this.state.targetWord
-    if (winrar) {
-      if (guess === winrar) {
-        this.handleClear()
-        // do win stuff - calc accuracy, next level
-        this.setState({
-          accuracy: (this.state.accuracy * this.state.level + 1) / (this.state.level + 1), 
-          level: this.state.level + 1
-        }, this.nextLevel())
-      } else if (guess.length === winrar.length) { 
-        this.handleClear()
-        const lastAccuracy = this.calculateAccuracy(guess, winrar)
-        this.setState({
-          accuracy: ((this.state.accuracy * this.state.level + lastAccuracy) / (this.state.level + 1)), 
-          level: this.state.level + 1
-        }, this.nextLevel())
-        if (this.state.accuracy < .9) {
-          // losing condition
-          alert(`I'm sorry, we are going to have to let you go.`)
-        } else {
-          // keep going
-        }
-      } 
+    if (winrar === guess) {
+      this.setState({
+        accuracy: (this.state.accuracy * this.state.level + 1) / (this.state.level + 1), 
+        level: this.state.level + 1
+      }, this.nextLevel())
+    } else {
+      const accuracyLast = this.calculateAccuracy(guess, winrar)
+      const accuracyLifetime = (this.state.accuracy * this.state.level + accuracyLast) / (this.state.level + 1)
+      
+      this.setState({
+        level: this.state.level + 1,
+        accuracy: accuracyLifetime
+      })
+
+      if (accuracyLifetime < this.state.canThreshold) {
+        alert("I am sorry. We are going to have to let you go")
+        this.handleLoss()
+      } else {
+        this.nextLevel()
+      }
     }
+  }
+  handleLoss = () => {
+    alert("We have another temporary engagement opening up. Ready?")
+    this.setState({
+      level: 1,
+      accuracy: 1,
+    }, this.nextLevel())
   }
   displayWord() {
     return (
@@ -67,18 +89,29 @@ class GamePage extends React.Component {
       </div>
     )
   }
+  goodBoy() {
+    const img = this.state.img + "9.jpg"
+
+    return (
+      <div className="game-bossImage__container-right">
+        <figure>
+          <img 
+            className="game-bossImage" 
+            src={img} 
+            alt="douche boss" />
+          <figcaption>Great job keep it up</figcaption>
+        </figure>
+      </div>
+    )
+  }
   displayBoss = () => {
-    let num = Math.floor(Math.random() * 32)
-    if (num !== 1 || num !== 9 ){
-      num = Math.floor(Math.random() * 32)
-    }
-    const img = this.state.img + num + ".jpg"
+    const img = this.state.bossImg
     return (
       <div className="game-bossImage__container">
         <figure>
           <img
             className="game-bossImage" 
-            alt="bossholes"
+            alt="bosshole"
             src={img}
             />
           <figcaption>"Hmm... I think you can do better."</figcaption>
@@ -94,11 +127,12 @@ class GamePage extends React.Component {
     })
   }
   nextLevel = () => {
-    this.generateNewWord()
-    this.setState({timeLeftInSeconds: 4})
     let intervalId = setInterval(this.timer, 1000);
-    this.setState({intervalId: intervalId})
-    this.setState({showBoss: !!this.state.showBoss})
+    this.generateNewWord()
+    this.setState({
+      timeLeftInSeconds: this.state.intervalInSeconds, 
+      intervalId: intervalId
+    })
   }
   round(number, precision) {
     var shift = function (number, precision) {
@@ -109,17 +143,21 @@ class GamePage extends React.Component {
   }
   timer = () => {
     let timeLeft = this.state.timeLeftInSeconds - 1
-    if (timeLeft >= 0) {
-      this.setState({timeLeftInSeconds: timeLeft})
-    } else {
+    if (timeLeft <= 0) {
       clearInterval(this.state.intervalId)
+      this.setState({timeLeftInSeconds: 0})
+      this.compareGuess(this.state.guessWord)
+      this.handleClear()
+      return
+    } else {
+      this.setState({timeLeftInSeconds: timeLeft})
     }
   }
   handleClear = () => {
     this.setState({ guessWord: '' })
   }
   handleInput = (e) => {
-    this.setState({guessWord: e.target.value}, this.compareGuess(e.target.value))
+    this.setState({guessWord: e.target.value})
   }
   render () {
     return (
@@ -138,7 +176,7 @@ class GamePage extends React.Component {
         <div>
           <button className="button" onClick={this.handleClear}>Clear</button>
         </div>
-        {this.displayBoss() }
+        { this.state.accuracy < 0.9 ? this.displayBoss() : this.goodBoy()}
        
       </div>
     )

@@ -30,7 +30,7 @@ class GameStart extends React.Component {
               onClick={() => this.setState({showInstructions: true})}
             >Start your career</button>
           </div>
-          <img src={this.state.img}/>
+          <img src={this.state.img} alt="main stock photo of losers in an empty room"/>
         </div>
       </div>
     )
@@ -47,13 +47,15 @@ class GameStart extends React.Component {
             >Start Game</button>
           </div>
           <div>
-            <p className="game-instructions__disclaimer"><super>*</super>Team membership should not be construed as an offer of employment nor change of contractor status. Thank you for your interest in {this.state.companyName}.</p>
+            <p className="game-instructions__disclaimer"><super>*</super>Team membership should not be construed as an offer of employment nor change of inependent contractor status. Thank you for your interest in {this.state.companyName}.</p>
           </div>
         </div>
         <div>
           <img
             className="game-instructions__image" 
-            src={this.state.img2 + "9.jpg"} />
+            src={this.state.img2 + "9.jpg"} 
+            alt="friendly whiteboy coming to help you with your soul crushing job"
+          />
         </div>
       </div>
     )
